@@ -1,15 +1,15 @@
 Source: rigol-dsa815
-Section: unknown
+Section: libs
 Priority: optional
 Maintainer: Martin Konrad <konrad@frib.msu.edu>
-Build-Depends: debhelper (>=9)
-Standards-Version: 3.9.8
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Git: git://anonscm.debian.org/collab-maint/rigol-dsa815.git
-#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/rigol-dsa815.git
+Build-Depends: debhelper (>=9), epics-debhelper (>= 8.14~),
+               epics-dev
+Standards-Version: 3.9.6
+Vcs-Git: https://github.com/epicsdeb/rigol-dsa815.git
+Vcs-Browser: https://github.com/epicsdeb/rigol-dsa815.git
 
-Package: rigol-dsa815
+Package: rigol-dsa815-dev
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${epics:Depends}, epics-stream-dev
+Description: EPICS support for Rigol DSA815
+ Stream Device support for Rigol DSA815 spectrum analyzer.

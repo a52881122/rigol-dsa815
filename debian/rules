@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 # See debhelper(7) (uncomment to enable)
 # output every command that modifies files on the build system.
-#export DH_VERBOSE = 1
+export DH_VERBOSE = 1
 
 
 # see FEATURE AREAS in dpkg-buildflags(1)
@@ -15,11 +15,13 @@
 
 
 %:
-	dh $@ 
+	dh $@ --with epics -Sepicsmake --parallel
 
 
-# dh_make generated override targets
-# This is example for Cmake (See https://bugs.debian.org/641051 )
-#override_dh_auto_configure:
-#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
-
+override_dh_install:
+	install -d debian/rigol-dsa815-dev/usr/lib/epics/protocol
+	install -m 644 protocol/rigolDSA815.proto debian/rigol-dsa815-dev/usr/lib/epics/protocol/
+	dh_install --fail-missing
+	# It seems like for single binary packages the configure directory
+	# doesn't get removed by dh_epics_postinstall. So we do it manually:
+	rm -rf debian/rigol-dsa815-dev/usr/lib/epics/configure
