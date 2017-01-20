@@ -1,0 +1,4 @@
+configure/O.*
+dbd
+rigolDSA815App/Db/O.*
+rigolDSA815App/src/O.*
