@@ -1,4 +1,4 @@
-InTerminator = '\n';
+SetInTerminator = '\n';
 OutTerminator = '\n';
 LockTimeout = 5000;
 ReplyTimeout = 200;
@@ -179,22 +179,15 @@ set_marker_enabled
 }
 
 
-
 find_peak{
-    out "CALC:MARK\$1:MAX:MAX";  
-}
-
-set_peak_mode{
     out "CALC:MARK\$1:MAX:\$2";
+    @init{get_marker_x(\$1);get_marker_y(\$1)}
 }
 
 set_marker_x{
     out "CALC:MARK\$1:X %f";
 }
 
-set_marker_y{
-    out "CALC:MARK\$1:Y %f";
-}
 
 get_marker_x{
     out "CALC:MARK\$1:X?"; in "%f";
@@ -209,7 +202,7 @@ set_sweep_mode{
 }
 
 get_sweep_status{
-    out "INIT:CONT?"; in "%{SINGLE|CONTINUOUS}";
+    out "INIT:CONT?"; in "%{0|1}";
 }
 
 set_trace_mode{
