@@ -1,0 +1,237 @@
+SetInTerminator = '\n';
+OutTerminator = '\n';
+LockTimeout = 5000;
+ReplyTimeout = 200;
+ReadTimeout = 100;
+
+read_serial {
+    out "*IDN?";
+    in "Rigol North America, DSA800 Series Spectrum Analyzer, %[A-Za-z0-9],%*s%*s%s";
+}
+
+send_cmd{
+    out "\$1"
+}
+
+set_trace_mode{
+	out ":TRAC\$1:MODE %{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW}";
+	@init {	out ":TRAC\$1:MODE?;*OPC?"; in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";}
+}
+
+get_trace_mode{
+	out ":TRAC\$1:MODE?;*OPC?";
+	in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";
+}
+
+read_float{
+    out "\$1?";
+    in "%f";
+}
+
+write_float{
+    out "\$1 %.9e";
+    @init{read_float;}
+}
+
+read_int{
+    out "\$1?"; in "%d";
+}
+
+write_int {
+    out "\$1 %d";
+    @init{read_int;}
+}
+
+get_center_freq{
+    out "FREQ:CENT?"; in "%f";
+}
+
+set_center_freq{
+   out "FREQ:CENT %f";
+   @init{get_center_freq;}
+}
+
+get_start_freq{
+    out "FREQ:STAR?"; in "%f";
+}
+
+set_start_freq{
+   out "FREQ:STAR %f";
+   @init{get_stop_freq;}
+}
+
+get_stop_freq{
+    out "FREQ:STOP?"; in "%f";
+}
+
+set_stop_freq{
+   out "FREQ:STOP %f"; 
+   @init{get_stop_freq;}
+}
+
+get_span_freq{
+    out "FREQ:SPAN?"; in "%f";
+}
+
+set_span_freq{
+   out "FREQ:SPAN %f";
+   @init{get_span_freq;}
+}
+
+get_band_res{
+	out ":SENS:BAND:RES?";
+	in "%u";
+}
+
+set_band_res{
+	out ":SENS:BAND:RES %u";
+	@init {get_band_res}
+}
+
+get_band_res_auto{
+	out ":SENS:BAND:RES:AUTO?";
+	in "%{0|1}";
+}
+
+set_band_res_auto{
+	out ":SENS:BAND:RES:AUTO %{0|1}";
+	@init {get_band_res_auto}
+}
+
+get_y_scale{
+   out "DISP:WIN:TRAC:Y:SCAL:PDIV?";in"%f";
+}
+
+set_y_scale
+{
+    out "DISP:WIN:TRAC:Y:SCAL:PDIV %f"
+    @init{get_y_scale}
+}
+
+get_sweep_time{
+	out ":SENS:SWE:TIME?";
+	in "%f";
+}
+
+set_sweep_time{
+	out ":SENS:SWE:TIME %f";
+	@init {out ":SENS:SWE:TIME?"; in "%f";}
+}
+
+get_sweep_time_auto{
+	out ":SENS:SWE:TIME:AUTO?";
+	in "%{0|1}";
+}
+
+set_sweep_time_auto{
+	out ":SENS:SWE:TIME:AUTO %{0|1}";
+}   
+
+reset{
+    out "*RST"
+}
+
+get_y_ref{
+   out "DISP:WIN:TRAC:Y:SCAL:RLEV?";in"%f";
+}   
+
+set_y_ref
+{
+    out "DISP:WIN:TRAC:Y:SCAL:RLEV %f";
+    @init{get_y_ref;}
+}
+
+set_x_scale_type{
+	out ":DISP:WIN:TRAC:X:SCAL:SPAC %{LIN|LOG}";
+}
+
+get_x_scale_type{
+	out ":DISP:WIN:TRAC:X:SCAL:SPAC?";
+	in "%{LIN|LOG}";
+}
+
+get_y_ref_offset{
+   out "DISP:WIN:TRAC:Y:SCAL:RLEV:OFFS?";in"%f";
+}   
+
+
+set_y_ref_offset
+{
+    out "DISP:WIN:TRAC:Y:SCAL:RLEV %f";
+    @init{get_y_ref;}
+}
+
+get_trace_data{
+   separator="\_,\_";
+   out ":TRAC:DATA? TRACE\$1"
+   in "#%*d\_%e"
+}
+
+
+is_marker_enabled{
+    out "CALC:MARK\$1:STAT?"
+    in "%{0|1}"
+}
+
+set_marker_enabled
+{
+    out "CALC:MARK\$1:STAT %{0|1}";
+}
+
+
+find_peak{
+    out "CALC:MARK\$1:MAX:\$2";
+    @init{get_marker_x(\$1);get_marker_y(\$1)}
+}
+
+set_marker_x{
+    out "CALC:MARK\$1:X %f";
+}
+
+
+get_marker_x{
+    out "CALC:MARK\$1:X?"; in "%f";
+}
+
+get_marker_y{
+    out "CALC:MARK\$1:Y?"; in "%f";
+}
+
+set_sweep_mode{
+    out "INIT:CONT &{0|1}";
+}
+
+get_sweep_status{
+    out "INIT:CONT?"; in "%{0|1}";
+}
+
+set_trace_mode{
+	out ":TRAC\$1:MODE %{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW}";
+	@init {	out ":TRAC\$1:MODE?;*OPC?"; in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";}
+}
+
+get_trace_mode{
+	out ":TRAC\$1:MODE?;*OPC?";
+	in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";
+}
+
+get_peaksearch_status{
+   out "CALC:MARK\$1:CPE?"; in "%{0|1}
+}
+
+set_peaksearch_status{
+   out "CALC:MARK\$1:CPE %{0|1}"
+}
+
+get_err{
+    out ":SYST:ERR?"; in "%#s";
+}
+
+clr_err{
+    out "*CLS;*WAI"
+}
+
+get_status{
+    out "*STB?;*WAI";
+    in "%d";
+}
