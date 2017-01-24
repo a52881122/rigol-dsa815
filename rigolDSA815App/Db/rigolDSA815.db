@@ -1,0 +1,222 @@
+#
+# Simple database and stream protocol file for basic SCPI (IEEE488.2) commands
+
+record(stringin, "$(SYS)_$(SUB):$(DEV)_$(INST):ID_RD_SER") {
+	field(DESC, "Serial no. of the signal generator")
+	field(DTYP, "stream")
+	field(INP,  "@rigolDSA800.proto read_serial $(PORT)")
+	field(SCAN, "10 second")
+}
+
+
+record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT") {
+	field(DESC, "Center Frequency Hz")
+	field(DTYP, "stream")
+	field(INP, "@rigolDSA800.proto get_center_frequency $(PORT)")
+	field(EGU, "Hz")
+	field(FLNK, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT")
+	field(SCAN, "1 second")
+}
+
+record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT") {
+	field(DESC, "Center Frequency MHz")
+	field(DTYP, "stream")
+	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT")
+	field(PREC, "9")
+	field(EGU, "MHz")
+	field(CALC, A*1e-6")
+	field(SCAN, "1 second")
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_CENT"){
+	field(DESC, "Center Frequency MHz")
+	field(EGU, "MHz")
+	field(PREC, 9)
+	field(FLNK, _$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_CENT")
+}
+
+record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_CENT"){
+	field(DESC, "Center Frequency Hz conversion")
+	field(DTYP, "stream")
+	field(EGU, "Hz")
+	field(INPA, $(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_CENT")
+	field(CALC, A*1e-6)
+	field(OUT, @rigolDSA800.proto set_center_frequency $(PORT))
+}
+
+record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT") {
+	field(DESC, "Start Frequency Hz")
+	field(DTYP, "stream")
+	field(INP, "@rigolDSA800.proto get_start_frequency $(PORT)")
+	field(EGU, "Hz")
+	field(FLNK, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT")
+	field(SCAN, "1 second")
+}
+
+record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT") {
+	field(DESC, "Start Frequency MHz")
+	field(DTYP, "stream")
+	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT")
+	field(PREC, "9")
+	field(EGU, "MHz")
+	field(CALC, A*1e-6")
+	field(SCAN, "1 second")
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STRT"){
+	field(DESC, "Start Frequency MHz")
+	field(EGU, "MHz")
+	field(PREC, 9)
+	field(FLNK, _$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STRT")
+}
+
+record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STRT"){
+	field(DESC, "Start Frequency Hz conversion")
+	field(DTYP, "stream")
+	field(EGU, "Hz")
+	field(INPA, $(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STRT")
+	field(CALC, A*1e6)
+	field(OUT, @rigolDSA800.proto set_start_frequency $(PORT))
+}
+
+record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP") {
+	field(DESC, "Stop Frequency Hz")
+	field(DTYP, "stream")
+	field(INP, "@rigolDSA800.proto get_stop_frequency $(PORT)")
+	field(EGU, "Hz")
+	field(FLNK, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP")
+	field(SCAN, "1 second")
+}
+
+record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP") {
+	field(DESC, "Stop Frequency MHz")
+	field(DTYP, "stream")
+	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP")
+	field(PREC, "9")
+	field(EGU, "MHz")
+	field(CALC, A*1e-6")
+	field(SCAN, "1 second")
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STOP"){
+	field(DESC, "Stop Frequency MHz")
+	field(EGU, "MHz")
+	field(PREC, 9)
+	field(FLNK, _$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STOP")
+}
+
+record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STOP"){
+	field(DESC, "Stop Frequency Hz conversion")
+	field(DTYP, "stream")
+	field(EGU, "Hz")
+	field(INPA, $(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STOP")
+	field(CALC, A*1e6)
+	field(OUT, @rigolDSA800.proto set_stop_frequency $(PORT))
+}
+
+record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN") {
+	field(DESC, "Span Frequency Hz")
+	field(DTYP, "stream")
+	field(INP, "@rigolDSA800.proto get_span_frequency $(PORT)")
+	field(EGU, "Hz")
+	field(FLNK, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN")
+	field(SCAN, "1 second")
+}
+
+record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN") {
+	field(DESC, "Span Frequency MHz")
+	field(DTYP, "stream")
+	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN")
+	field(PREC, "9")
+	field(EGU, "MHz")
+	field(CALC, A*1e-6")
+	field(SCAN, "1 second")
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN"){
+	field(DESC, "Span Frequency MHz")
+	field(EGU, "MHz")
+	field(PREC, 9)
+	field(FLNK, _$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN")
+}
+
+record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN"){
+	field(DESC, "Span Frequency Hz conversion")
+	field(DTYP, "stream")
+	field(EGU, "Hz")
+	field(INPA, $(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN")
+	field(CALC, A*1e6)
+	field(OUT, @rigolDSA800.proto set_span_frequency $(PORT))
+}
+
+record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_RES"){
+	field(DESC, "Frequency resolution")
+	field(DTYP, "stream")
+	field(EGU, "Hz")
+	field(INP, @rigolDSA800.proto get_band_res $(PORT))
+	field(SCAN, "1 second")
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_RES"){
+	field(DESC, "Frequency resolution")
+	field(DTYP, "stream")
+	field(EGU, "Hz")
+	field(OUT, @rigolDSA800.proto set_band_res $(PORT))
+}
+
+
+record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_RSET_OFST"){
+	field(DESC, "Reference level offset")
+	field(DTYP, "stream")
+	field(EGU, "dB")
+	field(INP, @rigolDSA800.proto get_y_ref_offset $(PORT))
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_CSET_OFST"){
+	field(DESC, "Reference level offset")
+	field(DTYP, "stream")
+	field(EGU, "dB")
+	field(OUT, @rigolDSA800.proto set_y_ref_offset $(PORT))
+}
+
+record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_RSET_RLEV"){
+	field(DESC, "Reference level")
+	field(DTYP, "stream")
+	field(EGU, "dBm")
+	field(INP, @rigolDSA800.proto get_y_ref $(PORT))
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_CSET_RLEV"){
+	field(DESC, "Reference level")
+	field(DTYP, "stream")
+	field(EGU, "dBm")
+	field(OUT, @rigolDSA800.proto set_y_ref $(PORT))
+}
+
+record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_RSET_PDIV"){
+	field(DESC, "Amplitude scale")
+	field(DTYP, "stream")
+	field(EGU, "dB")
+	field(INP, @rigolDSA800.proto get_y_ref $(PORT))
+}
+
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_CSET_PDIV"){
+	field(DESC, "Amplitude scale")
+	field(DTYP, "stream")
+	field(EGU, "dB")
+	field(OUT, @rigolDSA800.proto set_y_ref $(PORT))
+}
+
+record(bi, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CMD_RESA"){
+	field(DESC, "Auto frequency resolution")
+	field(DTYP, "stream")
+	field(EGU, "dB")
+	field(INP, @rigolDSA800.proto get_band_res_auto $(PORT))
+}
+
+record(bo, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_RCMD_RESA"){
+	field(DESC, "Amplitude scale")
+	field(DTYP, "stream")
+	field(EGU, "dB")
+	field(OUT, @rigolDSA800.proto set_band_res_auto $(PORT))
+}
