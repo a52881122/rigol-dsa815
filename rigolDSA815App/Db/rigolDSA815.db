@@ -1,5 +1,5 @@
 #
-# Simple database and stream protocol file for basic SCPI (IEEE488.2) commands
+# Database for rigol DSA800 spectrum analyzers
 
 record(stringin, "$(SYS)_$(SUB):$(DEV)_$(INST):ID_RD_SER") {
 	field(DESC, "Serial no. of the signal generator")
@@ -18,17 +18,19 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT") {
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT") {
 	field(DESC, "Center Frequency MHz")
-	field(DTYP, "stream")
+	field(DTYP, "float")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_CENT")
 	field(PREC, "9")
+	field(LOPR, 0.0)
+	field(HOPR, 1500)
 	field(EGU, "MHz")
 	field(CALC, A*1e-6")
-	field(SCAN, "1 second")
 }
 
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_CENT"){
 	field(DESC, "Center Frequency MHz")
 	field(EGU, "MHz")
+	field(DTYP, "float")
 	field(PREC, 9)
 	field(HOPR, 1500.0)
 	field(LOPR, 0.0)
@@ -55,7 +57,7 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT") {
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT") {
 	field(DESC, "Start Frequency MHz")
-	field(DTYP, "stream")
+	field(DTYP, "float")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT")
 	field(PREC, "9")
 	field(EGU, "MHz")
@@ -66,6 +68,7 @@ record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STRT") {
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STRT"){
 	field(DESC, "Start Frequency MHz")
 	field(EGU, "MHz")
+	field(DTYP, "float")
 	field(HOPR, 1500.0)
 	field(LOPR, 0.0)
 	field(PREC, 9)
@@ -92,7 +95,7 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP") {
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP") {
 	field(DESC, "Stop Frequency MHz")
-	field(DTYP, "stream")
+	field(DTYP, "float")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP")
 	field(PREC, "9")
 	field(EGU, "MHz")
@@ -102,6 +105,8 @@ record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_STOP") {
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STOP"){
 	field(DESC, "Stop Frequency MHz")
 	field(EGU, "MHz")
+	field(LOPR, 0.0)
+	field(HOPR, 1500)
 	field(PREC, 9)
 	field(FLNK, _$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_STOP")
 }
@@ -126,7 +131,7 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN") {
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN") {
 	field(DESC, "Span Frequency MHz")
-	field(DTYP, "stream")
+	field(DTYP, "float")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN")
 	field(PREC, "9")
 	field(EGU, "MHz")
@@ -135,7 +140,10 @@ record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_SPAN") {
 
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN"){
 	field(DESC, "Span Frequency MHz")
+	field(DTYP, "float")
 	field(EGU, "MHz")
+	field(LOPR, 0.0)
+	field(HOPR, 1500)
 	field(PREC, 9)
 	field(FLNK, _$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN")
 }
@@ -149,41 +157,20 @@ record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_SPAN"){
 	field(OUT, @rigolDSA815.proto set_span_frequency $(PORT))
 }
 
-record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_RES"){
+record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_RES"){
 	field(DESC, "Frequency resolution")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INP, @rigolDSA815.proto get_band_res $(PORT))
 	field(SCAN, "1 second")
-	field(FLNK, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_RES")
-}
-
-record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_RES"){
-	field(DESC, "Frequency resolution")
-	field(DTYP, "stream")
-	field(EGU, "MHz")
-	field(SCAN, "1 second")
-	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_RSET_RES")
-	field(CALC, "A*1e-6")
 }
 
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_RES"){
 	field(DESC, "Frequency resolution")
 	field(DTYP, "stream")
-	field(EGU, "MHz")
-	field(FLNK, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_RES")
-	
-}
-
-record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_RES"){
-	field(DESC, "Frequency resolution")
-	field(DTYP, "stream")
 	field(EGU, "Hz")
-	field(INPA, "$(SYS)_$(SUB):$(DEV)_$(INST):FR_CSET_RES")
-	field(CALC, "1e6*A"
 	field(OUT, @rigolDSA815.proto set_band_res $(PORT))
 }
-
 
 record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):AMPL_RSET_OFST"){
 	field(DESC, "Reference level offset")
@@ -275,33 +262,35 @@ record(bo, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CMD_MRK1"){
 	field(OUT, @rigolDSA815.proto set_marker_enabled(1) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKM1"){
-	field(DESC, "marker 1 max peak search"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKM1"){
+	field(DESC, "marker 1 max peak search")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(1, MAX) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKL1"){
-	field(DESC, "marker 1 next peak left"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKL1"){
+	field(DESC, "marker 1 next peak left")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(1, LEFT) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKR1"){
-	field(DESC, "marker 1 next peak right"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKR1"){
+	field(DESC, "marker 1 next peak right")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(1, RIGHT) $(PORT))
 }
 
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX1"){
-	field(DESC, "marker 1 set X position"
+	field(DESC, "marker 1 set X position")
 	field(EGU, "MHz")
-	field(OUT, @rigolDSA815.proto set_marker_X(1) $(PORT))
+	field(LOPR, 0.0)
+	field(HOPR, 1500)
+	field(DTYP, "float")
 	field(FLNK, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX1")
 }
 
 record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX1"){
-	field(DESC, "marker 1 set X position"
+	field(DESC, "marker 1 set X position")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INPA, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX1")
@@ -310,7 +299,7 @@ record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX1"){
 }
 
 record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX1"){
-	field(DESC, "marker 1 get X position"
+	field(DESC, "marker 1 get X position")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INP, @rigolDSA815.proto get_marker_X(1) $(PORT))
@@ -319,14 +308,14 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX1"){
 }
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX1"){
-	field(DESC, "marker 1 get X position"
+	field(DESC, "marker 1 get X position")
 	field(EGU, "MHz")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX1")
 	field(CALC, 1e-6*A)
 }
 
 record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSY1"){
-	field(DESC, "marker 1 get Y position"
+	field(DESC, "marker 1 get Y position")
 	field(DTYP, "stream")
 	field(EGU, "dBm")
 	field(INP, @rigolDSA815.proto get_marker_Y(1) $(PORT))
@@ -350,33 +339,35 @@ record(bo, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CMD_MRK2"){
 	field(OUT, @rigolDSA815.proto set_marker_enabled(2) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKM2"){
-	field(DESC, "marker 2 max peak search"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKM2"){
+	field(DESC, "marker 2 max peak search")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(2, MAX) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKL2"){
-	field(DESC, "marker 2 next peak left"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKL2"){
+	field(DESC, "marker 2 next peak left")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(2, LEFT) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKR2"){
-	field(DESC, "marker 2 next peak right"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKR2"){
+	field(DESC, "marker 2 next peak right")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(2, RIGHT) $(PORT))
 }
 
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX2"){
-	field(DESC, "marker 2 set X position"
+	field(DESC, "marker 2 set X position")
 	field(EGU, "MHz")
-	field(OUT, @rigolDSA815.proto set_marker_X(2) $(PORT))
+	field(LOPR, 0.0)
+	field(HOPR, 1500)
+	field(DTYP, "float")
 	field(FLNK, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX2")
 }
 
 record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX2"){
-	field(DESC, "marker 2 set X position"
+	field(DESC, "marker 2 set X position")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INPA, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX2")
@@ -385,7 +376,7 @@ record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX2"){
 }
 
 record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX2"){
-	field(DESC, "marker 2 get X position"
+	field(DESC, "marker 2 get X position")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INP, @rigolDSA815.proto get_marker_X(2) $(PORT))
@@ -394,14 +385,14 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX2"){
 }
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX2"){
-	field(DESC, "marker 2 get X position"
+	field(DESC, "marker 2 get X position")
 	field(EGU, "MHz")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX2")
 	field(CALC, 1e-6*A)
 }
 
 record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSY2"){
-	field(DESC, "marker 2 get Y position"
+	field(DESC, "marker 2 get Y position")
 	field(DTYP, "stream")
 	field(EGU, "dBm")
 	field(INP, @rigolDSA815.proto get_marker_Y(2) $(PORT))
@@ -426,33 +417,35 @@ record(bo, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CMD_MRK3"){
 	field(OUT, @rigolDSA815.proto set_marker_enabled(3) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKM3"){
-	field(DESC, "marker 3 max peak search"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKM3"){
+	field(DESC, "marker 3 max peak search")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(3, MAX) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKL3"){
-	field(DESC, "marker 3 next peak left"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKL3"){
+	field(DESC, "marker 3 next peak left")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(3, LEFT) $(PORT))
 }
 
-record(stringout, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKR3"){
-	field(DESC, "marker 3 next peak right"
+record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):FNC_CMD_PKR3"){
+	field(DESC, "marker 3 next peak right")
 	field(DTYP, "stream")
 	field(OUT, @rigolDSA815.proto find_peak(3, RIGHT) $(PORT))
 }
 
 record(ao, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX3"){
-	field(DESC, "marker 3 set X position"
+	field(DESC, "marker 3 set X position")
 	field(EGU, "MHz")
-	field(OUT, @rigolDSA815.proto set_marker_X(3) $(PORT))
+	field(LOPR, 0.0)
+	field(HOPR, 1500)
+	field(DTYP, "float")
 	field(FLNK, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX3")
 }
 
 record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX3"){
-	field(DESC, "marker 3 set X position"
+	field(DESC, "marker 3 set X position")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INPA, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX3")
@@ -461,7 +454,7 @@ record(calcout, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_CSET_PSX3"){
 }
 
 record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX3"){
-	field(DESC, "marker 3 get X position"
+	field(DESC, "marker 3 get X position")
 	field(DTYP, "stream")
 	field(EGU, "Hz")
 	field(INP, @rigolDSA815.proto get_marker_X(3) $(PORT))
@@ -470,14 +463,14 @@ record(ai, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX3"){
 }
 
 record(calcin, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX3"){
-	field(DESC, "marker 3 get X position"
+	field(DESC, "marker 3 get X position")
 	field(EGU, "MHz")
 	field(INPA, "_$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSX3")
 	field(CALC, 1e-6*A)
 }
 
 record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSY3"){
-	field(DESC, "marker 3 get Y position"
+	field(DESC, "marker 3 get Y position")
 	field(DTYP, "stream")
 	field(EGU, "dBm")
 	field(SCAN, "1 second")
