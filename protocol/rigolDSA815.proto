@@ -1,5 +1,4 @@
-SetInTerminator = '\n';
-OutTerminator = '\n';
+Terminator= "";
 LockTimeout = 5000;
 ReplyTimeout = 200;
 ReadTimeout = 100;
@@ -13,15 +12,6 @@ send_cmd{
     out "\$1"
 }
 
-set_trace_mode{
-	out ":TRAC\$1:MODE %{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW}";
-	@init {	out ":TRAC\$1:MODE?;*OPC?"; in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";}
-}
-
-get_trace_mode{
-	out ":TRAC\$1:MODE?;*OPC?";
-	in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";
-}
 
 read_float{
     out "\$1?";
@@ -104,8 +94,8 @@ get_y_scale{
 
 set_y_scale
 {
-    out "DISP:WIN:TRAC:Y:SCAL:PDIV %f"
-    @init{get_y_scale}
+    out "DISP:WIN:TRAC:Y:SCAL:PDIV %f";
+    @init{get_y_scale;}
 }
 
 get_sweep_time{
@@ -128,7 +118,7 @@ set_sweep_time_auto{
 }   
 
 reset{
-    out "*RST"
+    out "*RST";
 }
 
 get_y_ref{
@@ -163,14 +153,14 @@ set_y_ref_offset
 
 get_trace_data{
    separator="\_,\_";
-   out ":TRAC:DATA? TRACE\$1"
+   out ":TRAC:DATA? TRACE\$1";
    in "#%*d\_%e"
 }
 
 
 is_marker_enabled{
-    out "CALC:MARK\$1:STAT?"
-    in "%{0|1}"
+    out "CALC:MARK\$1:STAT?";
+    in "%{0|1}";
 }
 
 set_marker_enabled
@@ -216,11 +206,11 @@ get_trace_mode{
 }
 
 get_peaksearch_status{
-   out "CALC:MARK\$1:CPE?"; in "%{0|1}
+   out "CALC:MARK\$1:CPE?"; in "%{0|1}";
 }
 
 set_peaksearch_status{
-   out "CALC:MARK\$1:CPE %{0|1}"
+   out "CALC:MARK\$1:CPE %{0|1}";
 }
 
 get_err{
@@ -228,7 +218,7 @@ get_err{
 }
 
 clr_err{
-    out "*CLS;*WAI"
+    out "*CLS;*WAI";
 }
 
 get_status{
