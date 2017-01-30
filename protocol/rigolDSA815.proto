@@ -83,11 +83,11 @@ set_band_res{
 
 get_band_res_auto{
 	out ":SENS:BAND:RES:AUTO?";
-	in "%{0|1}\n";
+	in "%u\n";
 }
 
 set_band_res_auto{
-	out ":SENS:BAND:RES:AUTO %{0|1}";
+	out ":SENS:BAND:RES:AUTO %u";
 	@init {get_band_res_auto}
 }
 
@@ -113,11 +113,11 @@ set_sweep_time{
 
 get_sweep_time_auto{
 	out ":SENS:SWE:TIME:AUTO?";
-	in "%{0|1}";
+	in "%u";
 }
 
 set_sweep_time_auto{
-	out ":SENS:SWE:TIME:AUTO %{0|1}";
+	out ":SENS:SWE:TIME:AUTO %u";
 }   
 
 reset{
@@ -163,12 +163,12 @@ get_trace_data{
 
 is_marker_enabled{
     out "CALC:MARK\$1:STAT?";
-    in "%{0|1}\n";
+    in "%u\n";
 }
 
 set_marker_enabled
 {
-    out "CALC:MARK\$1:STAT %{0|1}";
+    out "CALC:MARK\$1:STAT %u";
 }
 
 get_marker_x{
@@ -194,7 +194,7 @@ set_sweep_mode{
 }
 
 get_sweep_status{
-    out "INIT:CONT?"; in "%{0|1}\n";
+    out "INIT:CONT?"; in "%u\n";
 }
 
 set_trace_mode{
@@ -208,11 +208,11 @@ get_trace_mode{
 }
 
 get_peaksearch_status{
-   out "CALC:MARK\$1:CPE?"; in "%{0|1}\n";
+   out "CALC:MARK\$1:CPE?"; in "%u\n";
 }
 
 set_peaksearch_status{
-   out "CALC:MARK\$1:CPE %{0|1}";
+   out "CALC:MARK\$1:CPE %u";
 }
 
 get_err{
