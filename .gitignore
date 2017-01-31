@@ -1,4 +1,5 @@
 configure/O.*
 dbd
+db
 rigolDSA815App/Db/O.*
 rigolDSA815App/src/O.*

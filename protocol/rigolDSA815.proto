@@ -1,5 +1,7 @@
-SetInTerminator = '\n';
-OutTerminator = '\n';
+#Terminator= "\n";
+#Terminator= CR LF
+#InTerminator= '\n';
+
 LockTimeout = 5000;
 ReplyTimeout = 200;
 ReadTimeout = 100;
@@ -13,19 +15,10 @@ send_cmd{
     out "\$1"
 }
 
-set_trace_mode{
-	out ":TRAC\$1:MODE %{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW}";
-	@init {	out ":TRAC\$1:MODE?;*OPC?"; in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";}
-}
-
-get_trace_mode{
-	out ":TRAC\$1:MODE?;*OPC?";
-	in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";
-}
 
 read_float{
     out "\$1?";
-    in "%f";
+    in "%f\n";
 }
 
 write_float{
@@ -34,7 +27,7 @@ write_float{
 }
 
 read_int{
-    out "\$1?"; in "%d";
+    out "\$1?"; in "%d\n";
 }
 
 write_int {
@@ -43,7 +36,7 @@ write_int {
 }
 
 get_center_freq{
-    out "FREQ:CENT?"; in "%f";
+    out "FREQ:CENT?"; in "%f\n";
 }
 
 set_center_freq{
@@ -52,16 +45,16 @@ set_center_freq{
 }
 
 get_start_freq{
-    out "FREQ:STAR?"; in "%f";
+    out "FREQ:STAR?"; in "%f\n";
 }
 
 set_start_freq{
    out "FREQ:STAR %f";
-   @init{get_stop_freq;}
+   @init{get_start_freq;}
 }
 
 get_stop_freq{
-    out "FREQ:STOP?"; in "%f";
+    out "FREQ:STOP?"; in "%f\n";
 }
 
 set_stop_freq{
@@ -70,7 +63,7 @@ set_stop_freq{
 }
 
 get_span_freq{
-    out "FREQ:SPAN?"; in "%f";
+    out "FREQ:SPAN?"; in "%f\n";
 }
 
 set_span_freq{
@@ -80,7 +73,7 @@ set_span_freq{
 
 get_band_res{
 	out ":SENS:BAND:RES?";
-	in "%u";
+	in "%u\n";
 }
 
 set_band_res{
@@ -90,27 +83,27 @@ set_band_res{
 
 get_band_res_auto{
 	out ":SENS:BAND:RES:AUTO?";
-	in "%{0|1}";
+	in "%u\n";
 }
 
 set_band_res_auto{
-	out ":SENS:BAND:RES:AUTO %{0|1}";
+	out ":SENS:BAND:RES:AUTO %u";
 	@init {get_band_res_auto}
 }
 
 get_y_scale{
-   out "DISP:WIN:TRAC:Y:SCAL:PDIV?";in"%f";
+   out "DISP:WIN:TRAC:Y:SCAL:PDIV?";in"%f\n";
 }
 
 set_y_scale
 {
-    out "DISP:WIN:TRAC:Y:SCAL:PDIV %f"
-    @init{get_y_scale}
+    out "DISP:WIN:TRAC:Y:SCAL:PDIV %f";
+    @init{get_y_scale;}
 }
 
 get_sweep_time{
 	out ":SENS:SWE:TIME?";
-	in "%f";
+	in "%f\n";
 }
 
 set_sweep_time{
@@ -120,19 +113,19 @@ set_sweep_time{
 
 get_sweep_time_auto{
 	out ":SENS:SWE:TIME:AUTO?";
-	in "%{0|1}";
+	in "%u";
 }
 
 set_sweep_time_auto{
-	out ":SENS:SWE:TIME:AUTO %{0|1}";
+	out ":SENS:SWE:TIME:AUTO %u";
 }   
 
 reset{
-    out "*RST"
+    out "*RST";
 }
 
 get_y_ref{
-   out "DISP:WIN:TRAC:Y:SCAL:RLEV?";in"%f";
+   out "DISP:WIN:TRAC:Y:SCAL:RLEV?";in"%f\n";
 }   
 
 set_y_ref
@@ -147,54 +140,53 @@ set_x_scale_type{
 
 get_x_scale_type{
 	out ":DISP:WIN:TRAC:X:SCAL:SPAC?";
-	in "%{LIN|LOG}";
+	in "%{LIN|LOG}\n";
 }
 
 get_y_ref_offset{
-   out "DISP:WIN:TRAC:Y:SCAL:RLEV:OFFS?";in"%f";
+   out "DISP:WIN:TRAC:Y:SCAL:RLEV:OFFS?";in"%f\n";
 }   
 
 
 set_y_ref_offset
 {
-    out "DISP:WIN:TRAC:Y:SCAL:RLEV %f";
-    @init{get_y_ref;}
+    out "DISP:WIN:TRAC:Y:SCAL:RLEV:OFFS %f";
+    @init{get_y_ref_offset;}
 }
 
 get_trace_data{
    separator="\_,\_";
-   out ":TRAC:DATA? TRACE\$1"
-   in "#%*d\_%e"
+   out ":TRAC:DATA? TRACE\$1";
+   in "#%*d\_%e\n"
 }
 
 
 is_marker_enabled{
-    out "CALC:MARK\$1:STAT?"
-    in "%{0|1}"
+    out "CALC:MARK\$1:STAT?";
+    in "%u\n";
 }
 
 set_marker_enabled
 {
-    out "CALC:MARK\$1:STAT %{0|1}";
+    out "CALC:MARK\$1:STAT %u";
 }
 
-
-find_peak{
-    out "CALC:MARK\$1:MAX:\$2";
-    @init{get_marker_x(\$1);get_marker_y(\$1)}
+get_marker_x{
+    out "CALC:MARK\$1:X?"; in "%f\n";
 }
 
 set_marker_x{
     out "CALC:MARK\$1:X %f";
 }
 
-
-get_marker_x{
-    out "CALC:MARK\$1:X?"; in "%f";
+get_marker_y{
+    out "CALC:MARK\$1:Y?"; in "%f\n";
 }
 
-get_marker_y{
-    out "CALC:MARK\$1:Y?"; in "%f";
+find_peak{
+    out "CALC:MARK\$1:STAT 1";
+    out "CALC:MARK\$1:MAX:\$2";
+    #@init{get_marker_x $1 ;get_marker_y $1;}
 }
 
 set_sweep_mode{
@@ -202,7 +194,7 @@ set_sweep_mode{
 }
 
 get_sweep_status{
-    out "INIT:CONT?"; in "%{0|1}";
+    out "INIT:CONT?"; in "%u\n";
 }
 
 set_trace_mode{
@@ -212,26 +204,26 @@ set_trace_mode{
 
 get_trace_mode{
 	out ":TRAC\$1:MODE?;*OPC?";
-	in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}";
+	in ";%{BLAN|WRIT|MAXH|MINH|VIEW|VID|POW};%*{0|1}\n";
 }
 
 get_peaksearch_status{
-   out "CALC:MARK\$1:CPE?"; in "%{0|1}
+   out "CALC:MARK\$1:CPE?"; in "%u\n";
 }
 
 set_peaksearch_status{
-   out "CALC:MARK\$1:CPE %{0|1}"
+   out "CALC:MARK\$1:CPE %u";
 }
 
 get_err{
-    out ":SYST:ERR?"; in "%#s";
+    out ":SYST:ERR?"; in "%#s\n";
 }
 
 clr_err{
-    out "*CLS;*WAI"
+    out "*CLS;*WAI";
 }
 
 get_status{
     out "*STB?;*WAI";
-    in "%d";
+    in "%d\n";
 }
