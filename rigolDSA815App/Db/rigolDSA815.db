@@ -303,7 +303,7 @@ record(ai, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RSET_PSY1"){
 	field(DESC, "marker 1 get Y position")
 	field(DTYP, "stream")
 	field(EGU, "dBm")
-	field(DISA, 0)
+	field(DISV, 0)
 	field(SDIS, "$(SYS)_$(SUB):$(DEV)_$(INST):ATPS_RCMD_MRK1")
 	field(INP, "@rigolDSA815.proto get_marker_y(1) $(PORT)")
 	field(SCAN, "1 second")
