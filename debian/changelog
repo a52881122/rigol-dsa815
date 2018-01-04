@@ -1,3 +1,13 @@
+rigol-dsa815 (1.0.1) unstable; urgency=medium
+
+  [ Martin Konrad ]
+  * Set line terminator
+
+  [ Daykin, Evan ]
+  * change incorrect DISA to DISV
+
+ -- Martin Konrad <konrad@frib.msu.edu>  Thu, 04 Jan 2018 12:02:52 -0500
+
 rigol-dsa815 (1.0.0) unstable; urgency=medium
 
   * Initial Release.
